@@ -20,6 +20,74 @@ Board
 
 # Block moving down
 # . can be nil or 0 or whatever. Just . for clarity
+#keey track of x and y position of each falling block
+#reset x and y position everytime we respawn a new block
+
+=end
+
+class Board
+
+  def initialize
+    @game_board = []
+    @block_falling = false
+    @falling_x = 0
+    @falling_y = 0
+    @block_shape = []
+    create_board
+  end
+
+  def create_board
+    10.times do 
+      @game_board << [0, 0, 0, 0, 0, 0]
+    end
+  end
+
+  def add_block(block)
+    #check if block exists at start - collision - cause game over
+    @block_shape = block.shape
+    @block_falling = true
+    @falling_x = 0
+    @falling_y = 0
+
+    block.shape.each do |coords|
+      @game_board[coords[0]][coords[1]] = "x"
+    end
+  end
+
+  def block_fall
+    
+    @block_shape.each do |coords|
+      @game_board[coords[0] + @falling_y][coords[1] + @falling_x] = 0
+    end
+
+    @falling_y += 1
+    @block_shape.each do |coords|
+      @game_board[coords[0] + @falling_y][coords[1] + @falling_x] = "x"
+    end
+  end
+
+end
+
+class Block
+
+  attr_reader :shape
+
+
+
+end
+
+class SquareBlock < Block
+
+  def initialize
+    # Shape contains the coordinates for the new block?
+    @shape = [[0,3],[0,4],[1,3],[1,4]]
+  end
+
+end
+
+
+
+=begin
 
   [.,.,.,.,.,.]
   [.,.,.,.,.,.]
@@ -126,7 +194,7 @@ Input
 Player
   Hold the score
 
-Gane
+Game
   Take input
   Update Board
   Redraw Board
